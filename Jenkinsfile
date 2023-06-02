@@ -1,47 +1,70 @@
 pipeline {
-    agent  any;
+    agent any
     stages {
-        stage('Preparing the environment') {
+
+        stage('Preparando el entorno') {
+            agent { 
+            node{
+              label "objetivo1"; 
+              }
+          }
             steps {
-                sh 'echo "el hostname es $HOSTNAME y el usuario es $USER"'
+                sh 'whoami'
+                sh 'echo POR FAVOR !!!!!! fijaos en este dato'
+                sh 'hostname'
                 sh 'python3 -m pip install -r requirements.txt'
             }
         }
-        stage('Code Quality') {
+        stage('Calidad de código') {
+            agent {
+                node {
+                    label "objetivo1";
+                }
+            }
             steps {
+                 sh 'whoami'
+                sh 'hostname'
                 sh 'python3 -m pylint app.py'
-                sh 'echo "el hostname es $HOSTNAME y el usuario es $USER"'
             }
         }
         stage('Tests') {
+             agent {
+                node {
+                    label "objetivo1";
+                }
+            }           
             steps {
-                sh 'echo "el hostname es $HOSTNAME y el usuario es $USER"'
+                sh 'whoami'
+                sh 'hostname'
                 sh 'python3 -m pytest'
             }
         }
    
-    stage('Build') {
+    stage('construcción del artefacto') {
           agent { 
             node{
-              label "DockerServer"; 
+              label "objetivo2"; 
               }
           }
           steps {
-              sh 'echo "el hostname es $HOSTNAME y el usuario es $USER"'
-              sh 'docker build https://github.com/AlissonMMenezes/Chapter10.git -t chapter10:latest'
+              sh 'whoami'
+              sh 'hostname'
+              sh 'docker build https://github.com/richifor/allison.git#main -t richijenkins:latest'
           }
       }        
-      stage('Deploy') {
+      stage('Despliegue') {
           agent { 
             node{
-              label "DockerServer"; 
+              label "objetivo2"; 
               }
           }
-          steps  {
-              sh 'docker run -tdi -p 5000:5000 chapter10:latest'
+          steps {
+              sh 'whoami'
+              sh ' echo si el dato anterior es root ... NOS HEMOS VUELTO LOCOS Y VAMOS A MORIR TODOS!!!!!!'
+              sh 'hostname'
+              sh 'docker run --name richiapp -tdi -p 5000:5000 richijenkins:latest'
           }
       }
     }
 
 }
-
