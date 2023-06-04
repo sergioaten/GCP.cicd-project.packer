@@ -5,6 +5,8 @@ This code is used as an example for the Chapter10 of the book DevOps With Linux
 """
 from functools import wraps
 from flask import Flask, request, jsonify
+import json
+import platform
 
 APP = Flask(__name__)
 
@@ -47,6 +49,30 @@ def transaction():
     new_limit = card.get("limit") - card.get("transaction").get("amount")
     response = {"approved": True, "newLimit": new_limit}
     return jsonify(response)
+
+@APP.route('/osinfo')
+def get_data():
+    # Get system information
+    system_info = {
+        'platform': platform.platform(),
+        'release': platform.release(),
+        'system': platform.system(),
+        'architecture' : platform.machine(),
+        'python_version' : platform.python_version(),
+        'node': platform.node(),
+    }
+
+    # Convert the data to JSON format
+    json_data = json.dumps(system_info, indent=2)
+
+    # Set up the HTTP response with the appropriate header
+    response = APP.response_class(
+        response=json_data,
+        status=200,
+        mimetype='application/json'
+    )
+
+    return response
 
 
 if __name__ == '__main__':
