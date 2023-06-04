@@ -43,7 +43,7 @@ pipeline {
                 sh ' echo si el dato anterior es root ... NOS HEMOS VUELTO LOCOS Y VAMOS A MORIR TODOS!!!!!!'
                 sh 'hostname'
                 sh 'docker stop $(docker ps -aq) && docker rm $(docker ps -aq) && docker rmi $(docker images -aq)'
-                sh 'docker run --name srgapp -tdi -p 4000:5000 srgjenkins:latest'
+                sh 'docker run --name srgapp -tdi -p 4000:5000 srgjenkins:${GIT_COMMIT}'
             }
         }
     }
