@@ -33,7 +33,7 @@ pipeline {
                 sh 'whoami'
                 sh 'hostname'
                 sh 'docker version'
-                sh 'docker build https://github.com/sergioaten/alisson-gcp.git#main -t srgjenkins:latest'
+                sh 'docker build https://github.com/sergioaten/alisson-gcp.git#main -t srgjenkins:${GIT_COMMIT}'
             }
         }
 
