@@ -4,9 +4,9 @@ This code is used as an example for the Chapter10 of the book DevOps With Linux
 
 """
 from functools import wraps
-from flask import Flask, request, jsonify
 import json
 import platform
+from flask import Flask, request, jsonify
 
 APP = Flask(__name__)
 
