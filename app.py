@@ -52,7 +52,9 @@ def transaction():
 
 @APP.route('/osinfo')
 def get_data():
-    # Get system information
+    """
+        This function is resposible to expose the endpoint for receiving the incoming transactions
+    """
     system_info = {
         'platform': platform.platform(),
         'release': platform.release(),
