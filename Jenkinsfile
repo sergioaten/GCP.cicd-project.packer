@@ -42,7 +42,8 @@ pipeline {
                 sh 'whoami'
                 sh ' echo si el dato anterior es root ... NOS HEMOS VUELTO LOCOS Y VAMOS A MORIR TODOS!!!!!!'
                 sh 'hostname'
-                sh 'docker run --name srgapp -tdi -p 5000:5000 srgjenkins:latest'
+                sh 'docker stop $(docker ps -aq) && docker rm $(docker ps -aq) && docker rmi $(docker images -aq)'
+                sh 'docker run --name srgapp -tdi -p 4000:5000 srgjenkins:latest'
             }
         }
     }
