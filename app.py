@@ -19,8 +19,8 @@ def check_card(func):
 
     def validation(*args, **kwargs):
         """
-          This function is a decorator,
-          which will return the function corresponding to the respective action
+            This function is a decorator,
+            which will return the function corresponding to the respective action
         """
         data = request.get_json()
         if not data.get("status"):
@@ -50,7 +50,7 @@ def transaction():
     response = {"approved": True, "newLimit": new_limit}
     return jsonify(response)
 
-@APP.route('/osinfo')
+@APP.route('/osinfo', methods=["GET"])
 def get_data():
     """
         This function is resposible to expose the endpoint for receiving the incoming transactions
