@@ -2,9 +2,6 @@ pipeline {
     agent {
         label "agent"; 
     }
-    environment {
-        agent_credentials = credentials('jenkins-agent')
-    }
     stages {
         stage('Preparando el entorno') {
             steps {
@@ -42,7 +39,6 @@ pipeline {
 
         stage('Subir artefacto a repositorio docker') {
             steps {
-                sh 'gcloud auth activate-service-account --key-file=$agent_credentials'
                 sh 'docker push us-central1-docker.pkg.dev/jenkins-project-388812/jenkins-repo/pythonapp:${GIT_COMMIT}'
             }
         }
