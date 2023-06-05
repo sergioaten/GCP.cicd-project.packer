@@ -38,7 +38,7 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'hostname'
-                sh 'docker build ${GIT_URL}#main -t ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
+                sh 'docker build ${GIT_URL}#${GIT_BRANCH} -t ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
             }
         }
 
