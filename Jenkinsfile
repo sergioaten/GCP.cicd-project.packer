@@ -2,6 +2,12 @@ pipeline {
     agent {
         label "agent"; 
     }
+    environment {
+        project_id = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
+        artifact_registry = 'us-central1-docker.pkg.dev'
+        artifact_name = 'pythonapp'
+        repo = 'jenkins-repo'
+    }
     stages {
         stage('Preparando el entorno') {
             steps {
@@ -32,14 +38,15 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'hostname'
-                sh 'docker version'
-                sh 'docker build https://github.com/sergioaten/alisson-gcp.git#main -t us-central1-docker.pkg.dev/jenkins-project-388812/jenkins-repo/pythonapp:${GIT_COMMIT}'
+                sh 'docker build ${GIT_URL}#main -t ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
             }
         }
 
         stage('Subir artefacto a repositorio docker') {
             steps {
-                sh 'docker push us-central1-docker.pkg.dev/jenkins-project-388812/jenkins-repo/pythonapp:${GIT_COMMIT}'
+                sh 'gcloud auth login'
+                sh 'gcloud auth configure-docker ${artifact_registry}'
+                sh 'docker push ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
             }
         }
 
