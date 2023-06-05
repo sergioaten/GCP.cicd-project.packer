@@ -44,8 +44,7 @@ pipeline {
 
         stage('Subir artefacto a repositorio docker') {
             steps {
-                sh 'gcloud auth login'
-                sh 'gcloud auth configure-docker ${artifact_registry}'
+                sh 'gcloud auth configure-docker ${artifact_registry} --quiet'
                 sh 'docker push ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
             }
         }
