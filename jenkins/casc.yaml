@@ -42,7 +42,7 @@ jenkins:
           - bootDiskAutoDelete: true
             bootDiskSizeGb: 10
             bootDiskSizeGbStr: "10"
-            bootDiskSourceImageName: "https://www.googleapis.com/compute/v1/projects/jenkins-project-388812/global/images/jenkins-agent-1685899060"
+            bootDiskSourceImageName: "https://www.googleapis.com/compute/v1/projects/jenkins-project-388812/global/images/jenkins-agent-1686151828"
             bootDiskSourceImageProject: "jenkins-project-388812"
             bootDiskType: "https://www.googleapis.com/compute/v1/projects/jenkins-project-388812/zones/us-central1-a/diskTypes/pd-ssd"
             description: "Ubuntu agent"
