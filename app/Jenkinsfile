@@ -16,7 +16,7 @@ pipeline {
                 sh 'echo POR FAVOR !!!!!! fijaos en este dato'
                 sh 'hostname'
                 dir('app') {
-                    sh 'python3 -m pip install -r app/requirements.txt'
+                    sh 'python3 -m pip install -r requirements.txt'
                 }
             }
         }
