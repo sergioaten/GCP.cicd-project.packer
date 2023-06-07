@@ -49,7 +49,7 @@ pipeline {
 
         stage('Subir artefacto a repo') {
             steps {
-                sh 'Subiendo la imágen de docker al "Artifact Registry" de Google Cloud'
+                sh 'echo Subiendo la imágen de docker al "Artifact Registry" de Google Cloud'
                 sh 'gcloud auth configure-docker ${artifact_registry} --quiet'
                 sh 'docker push ${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}'
             }
@@ -57,7 +57,7 @@ pipeline {
 
         stage('Desplegando la aplicación') {
             steps {
-                sh 'Testearemos si la aplicación está ya levantada para actualizar la versión de la imágen, sino, desplegaremos el cloud run.'
+                sh 'echo Testearemos si la aplicación está ya levantada para actualizar la versión de la imágen, sino, desplegaremos el cloud run.'
                 script {
                     def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${service_name} --format='value(status.url)' --region=\"us-central1\"") == 0
 
@@ -69,7 +69,7 @@ pipeline {
                         sh("gcloud run deploy ${service_name} --image=\"${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
                     }
                 }
-                sh 'Publicamos el servicio de cloud run para todos los usuarios'
+                sh 'echo Publicamos el servicio de cloud run para todos los usuarios'
                 sh 'gcloud run services add-iam-policy-binding ${service_name} --member="allUsers" --role="roles/run.invoker" --region="us-central1"'
             }
         }
