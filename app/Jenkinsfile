@@ -15,7 +15,7 @@ pipeline {
                 sh 'whoami'
                 sh 'echo POR FAVOR !!!!!! fijaos en este dato'
                 sh 'hostname'
-                dir($workdir) {
+                dir("${workdir}") {
                     sh 'python3 -m pip install -r requirements.txt'
                 }
             }
