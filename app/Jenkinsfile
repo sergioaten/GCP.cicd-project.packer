@@ -12,9 +12,7 @@ pipeline {
     stages {
         stage('Preparando el entorno') {
             steps {
-                sh 'whoami'
-                sh 'echo POR FAVOR !!!!!! fijaos en este dato'
-                sh 'hostname'
+                sh 'echo Instalando dependencias del contenedor'
                 dir(workdir) {
                     sh 'python3 -m pip install -r requirements.txt'
                 }
@@ -23,19 +21,18 @@ pipeline {
         
         stage('Calidad de código') {
             steps {
-                sh 'whoami'
-                sh 'hostname'
-                dir("${workdir}") {
-                    sh 'python3 -m pylint app.py'
+                sh 'echo Testeando la calidad del código'
+                dir(workdir) {
+                    sh 'python3 -m pylint app.py > pylint_report.txt'
+                    sh 'cat pylint_report.txt'
                 }
             }
         }
 
         stage('Tests') {         
             steps {
-                sh 'whoami'
-                sh 'hostname'
-                dir("${workdir}") {
+                sh 'echo Testeando la aplicación'
+                dir(workdir) {
                     sh 'python3 -m pytest'
                 }
             }
@@ -43,23 +40,24 @@ pipeline {
 
         stage('Construcción del artefacto') {
             steps {
-                sh 'whoami'
-                sh 'hostname'
-                dir("${workdir}") {
+                sh 'echo Construyendo la imágen de docker'
+                dir(workdir) {
                     sh 'docker build . -t ${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}'
                 }
             }
         }
 
-        stage('Subir artefacto a repositorio docker') {
+        stage('Subir artefacto a repo') {
             steps {
+                sh 'Subiendo la imágen de docker al "Artifact Registry" de Google Cloud'
                 sh 'gcloud auth configure-docker ${artifact_registry} --quiet'
                 sh 'docker push ${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}'
             }
         }
 
-        stage('Verificar estado del contenedor') {
+        stage('Desplegando la aplicación') {
             steps {
+                sh 'Testearemos si la aplicación está ya levantada para actualizar la versión de la imágen, sino, desplegaremos el cloud run.'
                 script {
                     def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${service_name} --format='value(status.url)' --region=\"us-central1\"") == 0
 
@@ -67,21 +65,13 @@ pipeline {
                         echo "El contenedor está en ejecución. Se actualizará la imagen."
                         sh("gcloud run services update ${service_name} --image=\"${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
                     } else {
-                        echo "El contenedor no está en ejecución. Se realizará la implementación del servicio."
+                        echo "El contenedor no está en ejecución. Se realizará el despliegue del servicio."
                         sh("gcloud run deploy ${service_name} --image=\"${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
                     }
                 }
+                sh 'Publicamos el servicio de cloud run para todos los usuarios'
                 sh 'gcloud run services add-iam-policy-binding ${service_name} --member="allUsers" --role="roles/run.invoker" --region="us-central1"'
             }
         }
     }
-
-    // stage('Despliegue') {
-    //     steps {
-    //         sh 'whoami'
-    //         sh ' echo si el dato anterior es root ... NOS HEMOS VUELTO LOCOS Y VAMOS A MORIR TODOS!!!!!!'
-    //         sh 'hostname'
-    //         sh 'docker run --name srgapp -d -p 5000:5000 srgjenkins:${GIT_COMMIT}'
-    //     }
-    // }
 }
