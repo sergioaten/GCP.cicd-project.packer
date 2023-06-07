@@ -65,7 +65,7 @@ pipeline {
 
                     if (containerRunning) {
                         echo "El contenedor está en ejecución. Se actualizará la imagen."
-                        sh("gcloud run services update ${service_name} --image=\"${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
+                        sh("gcloud run services update ${service_name} --image=\"${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
                     } else {
                         echo "El contenedor no está en ejecución. Se realizará la implementación del servicio."
                         sh("gcloud run deploy ${service_name} --image=\"${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
