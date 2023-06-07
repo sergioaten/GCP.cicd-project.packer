@@ -6,7 +6,7 @@
             "source_image_family": "ubuntu-2204-lts",
             "source_image_project_id": "ubuntu-os-cloud",
             "zone": "us-central1-a",
-            "disk_size": "20",
+            "disk_size": "10",
             "image_name": "jenkins-agent-{{timestamp}}",
             "image_family": "jenkins-agent",
             "ssh_username": "ubuntu"
