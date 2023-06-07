@@ -5,7 +5,7 @@ pipeline {
     environment {
         project_id = sh(script: 'gcloud config get-value project', returnStdout: true).trim()
         artifact_registry = 'us-central1-docker.pkg.dev'
-        artifact_name = 'pythonapp'
+        service_name = 'pythonapp'
         repo = 'jenkins-repo'
         
     }
@@ -54,25 +54,24 @@ pipeline {
         stage('Subir artefacto a repositorio docker') {
             steps {
                 sh 'gcloud auth configure-docker ${artifact_registry} --quiet'
-                sh 'docker push ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
+                sh 'docker push ${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}'
             }
         }
 
         stage('Verificar estado del contenedor') {
             steps {
                 script {
-                    def serviceName = 'pythonapp'  // Reemplaza con el nombre de tu servicio de Cloud Run
-                    def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${serviceName} --format='value(status.url)' --region=\"us-central1\"") == 0
+                    def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${${service_name}} --format='value(status.url)' --region=\"us-central1\"") == 0
 
                     if (containerRunning) {
                         echo "El contenedor está en ejecución. Se actualizará la imagen."
-                        sh("gcloud run services update ${serviceName} --image=\"${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
+                        sh("gcloud run services update ${${service_name}} --image=\"${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
                     } else {
                         echo "El contenedor no está en ejecución. Se realizará la implementación del servicio."
-                        sh("gcloud run deploy ${serviceName} --image=\"${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
+                        sh("gcloud run deploy ${${service_name}} --image=\"${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000")
                     }
                 }
-                sh 'gcloud run services add-iam-policy-binding pythonapp --member="allUsers" --role="roles/cloudfunctions.invoker --region="us-central1"'
+                sh 'gcloud run services add-iam-policy-binding ${service_name} --member="allUsers" --role="roles/cloudfunctions.invoker" --region="us-central1"'
             }
         }
     }
