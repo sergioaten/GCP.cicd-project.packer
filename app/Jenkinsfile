@@ -72,6 +72,7 @@ pipeline {
                         sh("gcloud run deploy ${serviceName} --image=\"${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}\" --region=\"us-central1\" --port=5000 --allow-unauthenticated")
                     }
                 }
+                sh 'gcloud run services add-iam-policy-binding pythonapp --member="allUsers" --role="roles/cloudfunctions.invoker"'
             }
         }
     }
