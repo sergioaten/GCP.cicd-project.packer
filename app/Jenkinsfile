@@ -15,7 +15,7 @@ pipeline {
                 sh 'whoami'
                 sh 'echo POR FAVOR !!!!!! fijaos en este dato'
                 sh 'hostname'
-                dir("${workdir}") {
+                dir(workdir) {
                     sh 'python3 -m pip install -r requirements.txt'
                 }
             }
@@ -25,7 +25,7 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'hostname'
-                dir('app') {
+                dir("${workdir}") {
                     sh 'python3 -m pylint app.py'
                 }
             }
@@ -35,7 +35,7 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'hostname'
-                dir('app') {
+                dir("${workdir}") {
                     sh 'python3 -m pytest'
                 }
             }
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'hostname'
-                dir('app') {
+                dir("${workdir}") {
                     sh 'docker build . -t ${artifact_registry}/${project_id}/${repo}/${service_name}:${GIT_COMMIT}'
                 }
             }
