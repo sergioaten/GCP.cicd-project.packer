@@ -9,47 +9,45 @@ pipeline {
         repo = 'jenkins-repo'
     }
     stages {
-        stage('Preparando el entorno') {
-            steps {
-                sh 'whoami'
-                sh 'echo POR FAVOR !!!!!! fijaos en este dato'
-                sh 'hostname'
-                sh 'pwd'
-                sh 'cd app'
-                sh 'pwd'
-                sh 'ls -l'
+        dir('app') {
+            stage('Preparando el entorno') {
+                steps {
+                    sh 'whoami'
+                    sh 'echo POR FAVOR !!!!!! fijaos en este dato'
+                    sh 'hostname'
                     sh 'python3 -m pip install -r app/requirements.txt'
+                }
             }
-        }
-        
-        stage('Calidad de código') {
-            steps {
-                sh 'whoami'
-                sh 'hostname'
-                sh 'python3 -m pylint app.py'
+            
+            stage('Calidad de código') {
+                steps {
+                    sh 'whoami'
+                    sh 'hostname'
+                    sh 'python3 -m pylint app.py'
+                }
             }
-        }
 
-        stage('Tests') {         
-            steps {
-                sh 'whoami'
-                sh 'hostname'
-                sh 'python3 -m pytest'
+            stage('Tests') {         
+                steps {
+                    sh 'whoami'
+                    sh 'hostname'
+                    sh 'python3 -m pytest'
+                }
             }
-        }
 
-        stage('Construcción del artefacto') {
-            steps {
-                sh 'whoami'
-                sh 'hostname'
-                sh 'docker build ${GIT_URL}#${GIT_BRANCH} -t ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
+            stage('Construcción del artefacto') {
+                steps {
+                    sh 'whoami'
+                    sh 'hostname'
+                    sh 'docker build ${GIT_URL}#${GIT_BRANCH} -t ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
+                }
             }
-        }
 
-        stage('Subir artefacto a repositorio docker') {
-            steps {
-                sh 'gcloud auth configure-docker ${artifact_registry} --quiet'
-                sh 'docker push ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
+            stage('Subir artefacto a repositorio docker') {
+                steps {
+                    sh 'gcloud auth configure-docker ${artifact_registry} --quiet'
+                    sh 'docker push ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
+                }
             }
         }
 
