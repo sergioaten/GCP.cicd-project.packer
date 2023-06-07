@@ -14,7 +14,11 @@ pipeline {
                 sh 'whoami'
                 sh 'echo POR FAVOR !!!!!! fijaos en este dato'
                 sh 'hostname'
-                sh 'python3 -m pip install -r requirements.txt'
+                sh 'pwd'
+                sh 'cd app'
+                sh 'pwd'
+                sh 'ls -l'
+                    sh 'python3 -m pip install -r app/requirements.txt'
             }
         }
         
