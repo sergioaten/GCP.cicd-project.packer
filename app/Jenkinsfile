@@ -61,7 +61,7 @@ pipeline {
         stage('Verificar estado del contenedor') {
             steps {
                 script {
-                    def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${${service_name}} --format='value(status.url)' --region=\"us-central1\"") == 0
+                    def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${service_name} --format='value(status.url)' --region=\"us-central1\"") == 0
 
                     if (containerRunning) {
                         echo "El contenedor está en ejecución. Se actualizará la imagen."
