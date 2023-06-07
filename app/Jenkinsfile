@@ -62,7 +62,7 @@ pipeline {
             steps {
                 script {
                     def serviceName = 'pythonapp'  // Reemplaza con el nombre de tu servicio de Cloud Run
-                    def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${serviceName} --format='value(status.url)'") == 0
+                    def containerRunning = sh(returnStatus: true, script: "gcloud run services describe ${serviceName} --format='value(status.url)' --region\"us-central1\"") == 0
 
                     if (containerRunning) {
                         echo "El contenedor está en ejecución. Se actualizará la imagen."
