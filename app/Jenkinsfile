@@ -45,7 +45,9 @@ pipeline {
             steps {
                 sh 'whoami'
                 sh 'hostname'
+                dir('app') {
                     sh 'docker build . -t ${artifact_registry}/${project_id}/${repo}/${artifact_name}:${GIT_COMMIT}'
+                }
             }
         }
 
