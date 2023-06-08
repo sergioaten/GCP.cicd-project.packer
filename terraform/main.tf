@@ -55,6 +55,16 @@ resource "google_dns_record_set" "A-jenkins" {
   type = "A"
 }
 
+resource "google_dns_record_set" "A-test" {
+  managed_zone = google_dns_managed_zone.sa-gcp.name
+  name         = "test.gcp.sergioatenciano.es."
+  rrdatas = [
+    "35.224.190.233",
+  ]
+  ttl  = 300
+  type = "A"
+}
+
 resource "tls_private_key" "ssh_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
