@@ -3,6 +3,7 @@ pipeline {
         label "agent"; 
     }
     environment {
+        GOOGLE_CREDENTIALS = credentials('AWS_ACCESS_KEY_ID')
         workdir = 'terraform'
     }
     stages {
