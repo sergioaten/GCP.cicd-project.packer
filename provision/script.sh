@@ -1,6 +1,7 @@
 sudo apt-get update
 sudo apt install curl
 sudo apt-get install -y default-jdk
+sudo apt-get install jq
 cd ~
 
 ###DOCKER###
