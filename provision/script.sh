@@ -1,7 +1,6 @@
+sudo add-apt-repository universe
 sudo apt-get update
-sudo apt install curl
-sudo apt-get install -y default-jdk
-sudo apt-get install jq
+sudo apt-get install default-jdk jq curl python3-pip -y
 cd ~
 
 ###DOCKER###
